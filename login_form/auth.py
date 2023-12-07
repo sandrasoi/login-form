@@ -10,6 +10,23 @@ from login_form.user import User
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
+def are_special_chars_included(password):
+    if "!" in password or "@" in password or "#" in password or "$" in password or "%" in password or "&" in password:
+        return True
+    else:
+        return False
+
+
+def is_sufficient_length(password):
+    # len(password) > 7 will evaluate to True or False
+    return len(password) > 7
+
+
+def is_valid(password):
+    return is_sufficient_length(password) and are_special_chars_included(password)
+
+
+
 @bp.route('/')
 def index():
     return render_template('index.html')
@@ -22,14 +39,19 @@ def register():
 
         error = None
 
-        if not username:
-            error = 'Username is required.'
+        if len(username) < 5:
+            error = 'Username must be at least 5 characters.'
+            flash(error)            
+            return render_template('register.html', error=error)
+
+        if is_valid(password) == False:
+            error = 'Invalid password. Password must be at least 8 characters long and contain at least one special character.'
+            flash(error)
+            return render_template('register.html', error=error)
 
         if error is None:
             User.create(username, password)
             return redirect(url_for('auth.login'))
-
-        flash(error)
 
     return render_template('register.html')
 
