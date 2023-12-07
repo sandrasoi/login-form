@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Semgrep - Lightweight SAST to find bugs and enfource code standards
-        uses: returntocorp/semgrep-action@v1
+        uses: returntocorp/semgrep-action
         with:
           config: >- # more at semgrep.dev/explore
             p/security-audit
