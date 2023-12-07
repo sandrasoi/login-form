@@ -7,8 +7,7 @@ class User():
   def create(cls, username, password):
     db = get_db()
     db.execute(
-      "INSERT INTO user (username, password) VALUES ('"+username+"', '"+password+"')",
-      ()
+      "INSERT INTO user (username, password) VALUES (?, ?)", (username, password)
     )
     db.commit()
 
