@@ -1,14 +1,15 @@
 from login_form.db import get_db
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
+
 class User():
   
   @classmethod
   def create(cls, username, password):
     db = get_db()
     db.execute(
-      "INSERT INTO user (username, password) VALUES ('"+username+"', '"+password+"')",
-      ()
+      "INSERT INTO user (username, password) VALUES (?, ?)", (username, password)
     )
     db.commit()
 
@@ -16,9 +17,7 @@ class User():
   def find_with_credentials(cls, username, password):
     db = get_db()
     user = db.execute(
-      "SELECT id, username, password FROM user WHERE username = '" + username + "' AND password = '" + password + "'"
-    ).fetchone()
-    print(user)
+      "SELECT id, username, password FROM user WHERE username = ? AND password = ? ", (username, password)).fetchone()
     if user:
         return User(user['username'], user['password'], user['id'])
     else:
